@@ -1,4 +1,5 @@
 class Tictactoe
+    attr_accessor :row1, :row2, :row3
     def initialize
         @row1 = [1, 2, 3]
         @row2 = [4, 5, 6]
@@ -8,14 +9,16 @@ class Tictactoe
         @blankrow3 = [7, 8, 9]
     end
 
-    def game_over
+    def game_over?
         if (@row1.uniq.size <= 1 || @row2.uniq.size <= 1 || @row3.uniq.size <= 1) || 
             ((@row1[0] == @row2[0]) && (@row2[0] == @row3[0])) || 
             ((@row1[1] == @row2[1]) && (@row2[1] == @row3[1])) ||
             ((@row1[2] == @row2[2]) && (@row2[2] == @row3[2])) ||
             ((@row1[0] == @row2[1]) && (@row2[1] == @row3[2])) ||
             ((@row1[2] == @row2[1]) && (@row2[1] == @row3[0])) 
-            return true
+            return 'win'
+        elsif (((@row1 & @blankrow1).any? == false) && ((@row2 & @blankrow2).any? == false) && ((@row3 & @blankrow3).any? == false))
+            return 'tie'
         end
     end
 
@@ -26,19 +29,13 @@ class Tictactoe
         p @row1
         p @row2
         p @row3
-            until (@row1.uniq.size <= 1 || @row2.uniq.size <= 1 || @row3.uniq.size <= 1) || 
-                ((@row1[0] == @row2[0]) && (@row2[0] == @row3[0])) || 
-                ((@row1[1] == @row2[1]) && (@row2[1] == @row3[1])) ||
-                ((@row1[2] == @row2[2]) && (@row2[2] == @row3[2])) ||
-                ((@row1[0] == @row2[1]) && (@row2[1] == @row3[2])) ||
-                ((@row1[2] == @row2[1]) && (@row2[1] == @row3[0])) ||
-                (((@row1 & @blankrow1).any? == false) && ((@row2 & @blankrow2).any? == false) && ((@row3 & @@blankrow3).any? == false))  
+            until game_over? == 'win' || game_over? == 'tie'  
                 if @playerturn % 2 == 1
 
                     puts "Player 1, Pick a number 1-9 to place your move in!"
                     spot = gets.chomp.to_i 
                     if spot < 4
-                        @row1[spot.to_i - 1] = puts @player1symbol
+                        @row1[spot.to_i - 1] = @player1symbol
                     elsif spot < 7
                         @row2[spot.to_i - 4] = @player1symbol
                     else 
@@ -64,12 +61,7 @@ class Tictactoe
                 end
                 @playerturn += 1
             end
-        if (@row1.uniq.size <= 1 || @row2.uniq.size <= 1 || @row3.uniq.size <= 1) || 
-            ((@row1[0] == @row2[0]) && (@row2[0] == @row3[0])) || 
-            ((@row1[1] == @row2[1]) && (@row2[1] == @row3[1])) ||
-            ((@row1[2] == @row2[2]) && (@row2[2] == @row3[2])) ||
-            ((@row1[0] == @row2[1]) && (@row2[1] == @row3[2])) ||
-            ((@row1[2] == @row2[1]) && (@row2[1] == @row3[0]))
+        if game_over? == 'win'
             if @playerturn % 2 == 0
                 puts "Congratulations Player 1, you win!"
             else
@@ -80,6 +72,3 @@ class Tictactoe
         end
     end 
 end
-
-playerone = Tictactoe.new
-playerone.startgame
